@@ -4,7 +4,6 @@ import com.example.demo.springbootsecurityjwt.dto.SignInResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +15,6 @@ public class JwtProvider {
     private final String secretKey;
     private final long validityInMilliseconds;
 
-    @Autowired
     public JwtProvider(@Value("${security.jwt.token.secret-key}") String secretKey,
                        @Value("${security.jwt.token.expiration}") long seconds) {
         this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());

@@ -1,17 +1,7 @@
 package com.example.demo.springbootsecurityjwt;
 
-import java.io.IOException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.Optional;
-import java.util.function.Function;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,8 +9,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.GenericFilterBean;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Base64;
+import java.util.Date;
+import java.util.Optional;
+import java.util.function.Function;
 
 public class JwtTokenFilter extends GenericFilterBean {
     private final String secret;
@@ -35,8 +33,8 @@ public class JwtTokenFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
             throws IOException, ServletException {
-        String headerValue = ((HttpServletRequest)req).getHeader("Authorization");
-        getBearerToken(headerValue).ifPresent(token-> {
+        String headerValue = ((HttpServletRequest) req).getHeader("Authorization");
+        getBearerToken(headerValue).ifPresent(token -> {
             String username = getClaimFromToken(token, Claims::getSubject);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
@@ -44,7 +42,7 @@ public class JwtTokenFilter extends GenericFilterBean {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails((HttpServletRequest)req));
+                        new WebAuthenticationDetailsSource().buildDetails((HttpServletRequest) req));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         });

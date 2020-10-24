@@ -16,7 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-
     @Value("${security.jwt.token.secret-key}")
     private String secret;
 
